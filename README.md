@@ -2,31 +2,31 @@
 Developing an agent system that identifies the user's questions and selectively executes appropriate functions(web search, inference, etc)
 
 ## Steps
-####[1] User Query
+#### [1] User Query
 ######    ↓
-####[2] Plan Agent
+#### [2] Plan Agent
 - 사용자의 질문을 받아서 행동 계획을 수립
 ######    ↓
-####[3] React Agent
+#### [3] React Agent
 - 계획에 따라 필요한 툴을 호출하여 정보를 수집
 - 수집된 정보는 tool_outputs에 저장
 - 수집된 정보에 따라 info를 업데이트
 ######    ↓
-####[4] Critic 1: Plan & Info 충분한가?
+#### [4] Critic 1: Plan & Info 충분한가?
 - 현재의 계획과 수집된 정보가 충분한지 평가
 - 충분하지 않다면 개선 사항을 제안
 - 충분하다면 Context Integrator로 이동
 ######    ↘
-####[5] Context Integrator: 통합 플랜 실행
+#### [5] Context Integrator: 통합 플랜 실행
 - 수집된 정보를 바탕으로 통합된 문맥을 생성
 - integrated_context에 저장
 ######    ↓
-####[6] Critic 2: 응답 생성 전에 충분한가?
+#### [6] Critic 2: 응답 생성 전에 충분한가?
 - 통합된 문맥이 최종 응답을 생성하기에 충분한지 평가
 - 충분하지 않다면 개선 사항을 제안
 - 충분하다면 최종 응답 생성기로 이동
 ######    ↘
-####[[7] Response Generator: 최종 응답 생성
+#### [[7] Response Generator: 최종 응답 생성
 
 ## Needed functions
 - query_input	사용자 입력 처리
