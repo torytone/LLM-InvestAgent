@@ -16,6 +16,7 @@ dbretriever = Chroma(
     persist_directory=r'./DB',
 )
 
+# LLM 인스턴스 객체
 llm = ChatOpenAI(model="gpt-4o", api_key=api_key, temperature=0.5)
 
 # 툴 정의
@@ -49,9 +50,17 @@ def web_search(query: str) -> list:
 def summarize(text: str) -> str:
     """주어진 텍스트를 요약하는 툴"""
     print(f"... Summarizing ...\n")
-    # 요약 로직 구현. ChatOpenAI 모델을 사용하여 요약을 생성합니다.
-
-    return f"{summtext}"
+    try:
+        prompt = f"""
+        아래 내용을 핵심 위주로 5줄 이내로 요약해줘.
+        반드시 한국어만로 답변해줘.
+        ---
+        {text}
+        """
+        response = llm.invoke(prompt)
+        return response.content
+    except Exception as e:
+        return f"요약 실패: {str(e)}"
 
 
 @tool
