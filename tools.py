@@ -33,6 +33,7 @@ def web_search(query: str) -> list:
     """웹 검색을 수행하는 툴"""
     print(f"... Web Searching ...\n")
     # 웹 검색 로직 구현
+    # 테스트
 
     return result
 
