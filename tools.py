@@ -9,6 +9,8 @@ from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 apiconfig = configparser.ConfigParser()
 apiconfig.read('./config.ini')
 api_key = apiconfig.get('openai', 'API_KEY')
+tavily_key = apiconfig.get('tavily', 'API_KEY')  # tavily api 키 따로 추가 꼭 필요합니다!
+
 
 dbretriever = Chroma(
     collection_name="analyst_reports",
@@ -33,15 +35,9 @@ def rag_search(query: str) -> list:
 @tool
 def web_search(query: str) -> list:
     """웹 검색을 수행하는 툴"""
-    print(f"... Web Searching ...\n")
     try:
-        prompt = f"""
-        '{query}'에 대해 2024~2025년 기준의 최신 금융, 경제 뉴스·이슈 중심으로 정리해줘.
-        사실 기반 정보만 제공하고, 확인되지 않은 정보는 포함하지 마.
-        한국어로만 답변해줘.
-        """
-        response = llm.invoke(prompt)
-        return [{"web_search_result": response.content}]
+        result = tavily_search.invoke(query)
+        return result.get("results", [])
     except Exception as e:
         return [{"error": str(e)}]
 
