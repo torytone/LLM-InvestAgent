@@ -4,7 +4,7 @@ import urllib
 from langchain_chroma import Chroma
 from langchain_community.tools import TavilySearchResults
 from langchain_core.tools import tool
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 
 apiconfig = configparser.ConfigParser()
 apiconfig.read('./config.ini')
@@ -16,6 +16,7 @@ dbretriever = Chroma(
     persist_directory=r'./DB',
 )
 
+llm = ChatOpenAI(model="gpt-4o", api_key=api_key, temperature=0.5)
 
 # 툴 정의
 @tool
@@ -32,10 +33,16 @@ def rag_search(query: str) -> list:
 def web_search(query: str) -> list:
     """웹 검색을 수행하는 툴"""
     print(f"... Web Searching ...\n")
-    # 웹 검색 로직 구현
-    # 테스트
-
-    return result
+    try:
+        prompt = f"""
+        '{query}'에 대해 2024~2025년 기준의 최신 금융, 경제 뉴스·이슈 중심으로 정리해줘.
+        사실 기반 정보만 제공하고, 확인되지 않은 정보는 포함하지 마.
+        한국어로만 답변해줘.
+        """
+        response = llm.invoke(prompt)
+        return [{"web_search_result": response.content}]
+    except Exception as e:
+        return [{"error": str(e)}]
 
 
 @tool
