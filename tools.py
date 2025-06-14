@@ -67,6 +67,13 @@ def summarize(text: str) -> str:
 def self_reasoning(query: str) -> str:
     """자체 추론을 수행하는 툴"""
     print(f"... Reasoning ...\n")
-    # 자체 추론 로직 구현. ChatOpenAI 모델을 사용하여 자체 추론을 생성합니다.
-
-    return f"Self-Reasoning : {reasoning}"
+    try:
+        prompt = f"""
+        '{query}'에 대해 금융 전문가의 입장에서 논리적으로 분석하고 전망을 제시해줘.
+        최근 데이터와 사례를 최대한 참고해.
+        반드시 한국어로만 답변해줘.
+        """
+        response = llm.invoke(prompt)
+        return response.content
+    except Exception as e:
+        return f"자체추론 실패: {str(e)}"
